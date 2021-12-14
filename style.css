@@ -1,0 +1,64 @@
+html {
+  overflow: hidden;
+}
+
+body { 
+  background-color: #1a1a1a; 
+  font-family: Verdana, serif, 95%;
+}
+
+* {
+  color: #e6e6e6;
+}
+
+ul { 
+  display: none; 
+  writing-mode: horizontal-tb;
+  padding-inline-start: 15px;
+}
+
+ul li::marker {
+  font-size: 2px;
+}
+
+#marketlist {
+  width: 25%;
+  height: 945px;
+  overflow: auto;
+}
+
+#detailslist {
+  width: 75%;
+  height: 950px;
+  overflow: auto;
+  
+}
+
+.main {
+  display: flex;
+  margin: 0;
+  align-items: start;
+  padding: 5px;
+}
+
+.main > .itemlists, p { 
+  margin: 10px;
+}
+
+.browse {
+/*  width: 25%;
+  height: 300px;
+*/
+  margin: 5px;
+  line-height: 0.8;
+}
+
+.details {
+  width: 100%;
+  text-align: center;
+}
+
+th, td {
+  border-bottom: 3px solid #535353;
+  text-align: center;
+}
