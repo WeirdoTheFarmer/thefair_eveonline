@@ -1,7 +1,6 @@
 import json
 
 
-
 class TypeID:
 
     def getID(self, typeName):
