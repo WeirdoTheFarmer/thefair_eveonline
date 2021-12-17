@@ -6,6 +6,9 @@ class StationsID:
     def getID(self, locationID):
         with open("stationID.json") as file:
             stationID_DB = json.load(file)
-        location_id = str(locationID)
-        locationName = stationID_DB[location_id]["stationName"]
+        locationName = stationID_DB[locationID]["stationName"]
+
         return(locationName)
+
+x = StationsID()
+print(x.getID("60014862"))
