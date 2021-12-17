@@ -2,6 +2,9 @@ let myUrl_ = 'https://esi.evetech.net/latest/markets/10000002/orders/?datasource
 let typeIdUrl_OLD = 'https://www.fuzzwork.co.uk/api/typeid.php?typename='
 let typeIdUrl = 'http://192.168.1.2:8000/itemID/'
 let location_id_url = 'http://192.168.1.2:8000/location/'
+const esi_url = ["https://esi.evetech.net/latest/markets/", "/orders/?datasource=tranquility&order_type=all&page=1&type_id="]
+
+const capitals_regions = ["10000043", "10000002", "10000032", "10000030"];
 
 let marketsData = [];
 let itemID;
@@ -25,30 +28,45 @@ async function getData(elem_ID) {
 // Send request GET item ID
 	const itemID = await getItemID(elem_ID)
 
-	let req = myUrl_ + itemID; // URL for request to esi evetech for prices/location/quantity etc.
-	await fetch(req)
-		.then(response => response.json())
-		.then(data => {
-			data.forEach((element, index, array) => {
-				let tbody = document.querySelector("tbody"); 
-				let template = document.querySelector('#itemrow');
-
-				let clone = template.content.cloneNode(true);
-				let td = clone.querySelectorAll('td');
-
-				if (!element["is_buy_order"]){
-					const location = getLocation(element["location_id"]);
-					td[0].innerText = element["volume_remain"];
-					td[1].innerText = element["price"] + " ISK";
+	const req_orders_responce = [];
+	
+	capitals_regions.forEach(async function(item){
+		
+		const rq_url = encodeURI(esi_url[0] + item + esi_url[1] + itemID);
+		let request = new XMLHttpRequest();
+		request.open('GET', rq_url);
+		request.responseType = 'json';
+		request.onload = await async function() {
+			let orders  = JSON.stringify(request.response);
+			orders = JSON.parse(orders);
+		
+		
+			for (let order of orders) {
+				req_orders_responce.push(order);
+				if (!order["is_buy_order"]) {
+					let tbody = document.querySelector("tbody"); 
+					let template = document.querySelector('#itemrow');
+					let clone = template.content.cloneNode(true);
+					let td = clone.querySelectorAll('td');
+				
+					let location_id = order["location_id"];
+					location_id = location_id.toString();
+					let location = await getLocation(location_id);
+					td[0].innerText = order["volume_remain"];
+					td[1].innerText = order["price"] + " ISK";
 					td[2].innerText = location;
-//					td[2].innerText = element["location_id"];
-					tbody.appendChild(clone);
+				//	td[2].innerText = order["location_id"];
+					tbody.appendChild(clone);	
+				
 				}
-			})
 			
-		})
-		.catch(console.error);
-}
+			}
+		
+		}
+		request.send();
+	})
+
+}	
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 async function getItemID(_element) {
@@ -65,7 +83,25 @@ async function getItemID(_element) {
 }
 
 async function getLocation(_locationID) {
-	const id_request = await fetch (encodeURI(location_id_url + _locationID))	
+	const id_request = await fetch (location_id_url + _locationID);
 	let resp = await id_request.json();
 	return resp["locationID"];
+}
+
+async function get_orders_data(_item_id) {
+	const orders_request = await fetch(encodeURI(myUrl_ + _item_id));
+	const orders_json = await orders_request.json();
+	return orders_json;
+}
+
+function get_orders(_item_id) {
+	const rq_url = encodeURI(myUrl_ + _item_id);
+	let request = new XMLHttpRequest();
+	request.open('GET', rq_url);
+	request.responseType = 'json';
+	request.onload = function() {
+		let orders  = JSON.stringify(request.response);
+		return orders;
+	}
+	request.send();
 }
