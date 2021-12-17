@@ -36,7 +36,7 @@ async function getData(elem_ID) {
 		let request = new XMLHttpRequest();
 		request.open('GET', rq_url);
 		request.responseType = 'json';
-		request.onload = await async function() {
+		request.onload = async function() {
 			let orders  = JSON.stringify(request.response);
 			orders = JSON.parse(orders);
 		
@@ -55,7 +55,6 @@ async function getData(elem_ID) {
 					td[0].innerText = order["volume_remain"];
 					td[1].innerText = order["price"] + " ISK";
 					td[2].innerText = location;
-				//	td[2].innerText = order["location_id"];
 					tbody.appendChild(clone);	
 				
 				}
