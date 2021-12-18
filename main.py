@@ -1,7 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from typeID import TypeID
+
 from stationID import StationID
+
+from stationsID import StationsID
+
 
 app = FastAPI()
 
@@ -18,6 +22,7 @@ app.add_middleware(
 )
 
 id_request = TypeID()
+
 station_name_request = StationID()
 
 @app.get("/itemID/{item_name}")

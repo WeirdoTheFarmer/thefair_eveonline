@@ -1,3 +1,4 @@
+
 let myUrl_ = 'https://esi.evetech.net/latest/markets/10000002/orders/?datasource=tranquility&order_type=all&page=1&type_id=';
 let typeIdUrl_OLD = 'https://www.fuzzwork.co.uk/api/typeid.php?typename='
 let typeIdUrl = 'http://192.168.1.2:8000/itemID/'
@@ -92,7 +93,6 @@ async function get_orders_data(_item_id) {
 	const orders_json = await orders_request.json();
 	return orders_json;
 }
-
 function get_orders(_item_id) {
 	const rq_url = encodeURI(myUrl_ + _item_id);
 	let request = new XMLHttpRequest();
@@ -109,5 +109,5 @@ async function open_json_file(_locationID) {
 	const id_request = await fetch ('http://192.168.1.2/stationID.json');
 	let resp = await id_request.json();
 	return resp[_locationID]["stationName"];
-	
 }
+
