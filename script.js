@@ -1,6 +1,10 @@
 let myUrl_ = 'https://esi.evetech.net/latest/markets/10000002/orders/?datasource=tranquility&order_type=all&page=1&type_id=';
 let typeIdUrl_OLD = 'https://www.fuzzwork.co.uk/api/typeid.php?typename='
 let typeIdUrl = 'http://192.168.1.2:8000/itemID/'
+let location_id_url = 'http://192.168.1.2:8000/stationID/'
+const esi_url = ["https://esi.evetech.net/latest/markets/", "/orders/?datasource=tranquility&order_type=all&page=1&type_id="]
+
+const capitals_regions = ["10000043", "10000002", "10000032", "10000030"];
 
 let marketsData = [];
 let itemID;
@@ -12,8 +16,6 @@ function OnClick(id) {
 	let childUl = document.getElementById(id);
 	if (childUl.style.display === "block") {
 		childUl.style.display = "none";
-//		} else if (childUl.style.display === undefined) {
-//			childUl.style.display = "none";
 	} else {
 		childUl.style.display = "block";
 	} 
@@ -22,95 +24,90 @@ function OnClick(id) {
 async function getData(elem_ID) {
 //   Cleared table for new item or reload/update same.
 	document.getElementById('tablebody').innerHTML = ""
+
+// Send request GET item ID
+	const itemID = await getItemID(elem_ID)
+
+	const req_orders_responce = [];
 	
-// Replace "space" in item name to "%20" cuz dindt work LOL
-//	let itemName = elem_ID.innerText.replace(" ", "%20");  
-	let itemName = elem_ID.innerText;  
-
-	let getItemIDUrl = typeIdUrl + itemName; // URL for request to fuzzwork and get item IDs
-
-	const getItemIDUrlEncod = encodeURI(getItemIDUrl);	
-	
-	let myHeader = new Headers();
-	myHeader.append("Content-Type", "application/json");
-	const idRequest = await fetch(getItemIDUrlEncod);
-	let resp = await idRequest.json();
-	itemID = resp["typeID"];
-
-	let req = myUrl_ + itemID; // URL for request to esi evetech for prices/location/quantity etc.
-	await fetch(req)
-		.then(response => response.json())
-		.then(data => {
-			data.forEach((element, index, array) => {
-				let tbody = document.querySelector("tbody"); 
-				let template = document.querySelector('#itemrow');
-
-				let clone = template.content.cloneNode(true);
-				let td = clone.querySelectorAll('td');
-
-				if (!element["is_buy_order"]){
-					td[0].innerText = element["volume_remain"];
-					td[1].innerText = element["price"] + " ISK";
-					td[2].innerText = element["location_id"];
-					tbody.appendChild(clone);
+	capitals_regions.forEach(async function(item){
+		
+		const rq_url = encodeURI(esi_url[0] + item + esi_url[1] + itemID);
+		let request = new XMLHttpRequest();
+		request.open('GET', rq_url);
+		request.responseType = 'json';
+		request.onload = async function() {
+			let orders  = JSON.stringify(request.response);
+			orders = JSON.parse(orders);
+		
+			for (let order of orders) {
+				req_orders_responce.push(order);
+				if (!order["is_buy_order"]) {
+					let tbody = document.querySelector("tbody"); 
+					let template = document.querySelector('#itemrow');
+					let clone = template.content.cloneNode(true);
+					let td = clone.querySelectorAll('td');
+				
+					let location_id = order["location_id"];
+					location_id = location_id.toString();
+					let location = await getLocation(location_id);
+					td[0].innerText = order["volume_remain"];
+					td[1].innerText = order["price"] + " ISK";
+					td[2].innerText = location;
+					tbody.appendChild(clone);	
+				
 				}
-			})
 			
-		})
-		.catch(console.error);
-}
+			}
+		
+		}
+		request.send();
+	})
+
+
+}	
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function getPrices(thisElement) {
-	let tbody = document.querySelector("tbody");
-	let template = document.querySelector('#itemrow');
-
-	let clone = template.content.cloneNode(true);
-	let td = clone.querySelectorAll('td');
-
-
-
-	let myTable = document.getElementById('pricetable');
-	let thisElementId = ""
-
-	let itemName = thisElement.innerText;
-	itemName = itemName.replace(" ", "%20");
-	console.log(typeIdUrl + itemName)
-
-	let myRequest = new Request(typeIdUrl + itemName, {mode: 'no-cors'});
+async function getItemID(_element) {
 	
-	makeRequest(myRequest);
+	let itemName = _element.innerText;  
+	let getItemIDUrl = typeIdUrl + itemName; // URL  request get item IDs
 
+	const getItemIDUrlEncod = encodeURI(getItemIDUrl);	
+	let myHeader = new Headers();
+	myHeader.append("Content-Type", "application/json");
+	const idRequest = await fetch(getItemIDUrl);
+	let resp = await idRequest.json();
+	return resp["typeID"];
+}
 
-	let itemUrl = myUrl_ + thisElementId; 
+async function getLocation(_locationID) {
+	const id_request = await fetch (location_id_url + _locationID);
+	let resp = await id_request.json();
+	return resp["stationName"];
+}
 
-	fetch(itemUrl)
-		.then(response => response.json().then(data =>{
-			myTable.innerHTML = '<tr>' + '<th>Quantity</th>' +	'<th>Price</th>' + '<th>Location</th>' + '</tr>';
-			data.forEach(element  => {
-				if (!element["is_buy_order"]) {
-					td[0].innerText = element["volume_ramain"];
-					tbody.appendChild(clone);
+async function get_orders_data(_item_id) {
+	const orders_request = await fetch(encodeURI(myUrl_ + _item_id));
+	const orders_json = await orders_request.json();
+	return orders_json;
+}
 
-//				myTable.innerHTML += '<tr>' + '<td>' + element["volume_remain"] + '</td>' +
-//											  '<td>' + element["price"] + '</td>' +
-//											  '<td>' + element["location_id"] + '</td>' +
-//									'</tr>';
-				}
-			})
-		}));
-}	
+function get_orders(_item_id) {
+	const rq_url = encodeURI(myUrl_ + _item_id);
+	let request = new XMLHttpRequest();
+	request.open('GET', rq_url);
+	request.responseType = 'json';
+	request.onload = function() {
+		let orders  = JSON.stringify(request.response);
+		return orders;
+	}
+	request.send();
+}
+
+async function open_json_file(_locationID) {
+	const id_request = await fetch ('http://192.168.1.2/stationID.json');
+	let resp = await id_request.json();
+	return resp[_locationID]["stationName"];
 	
-
-function getTypeId(itemName) {
-	fetch((typeIdUrl + _typeID))
-		.then(response => response.json().then(data => {
-			if (data["typeName"] === _typeID){
-				console.log("1")
-//				return toString(data["typeID"]);
-				return "27920";
-			} else {
-				console.log("Wrong TypeName For ID")
-			}
-		}))
 }
