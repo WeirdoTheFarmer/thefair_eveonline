@@ -1,4 +1,4 @@
-# The Fair Eve Online Marketplace
+# The Fair - Eve Online Marketplace
 Learning "front-end", "back-end" and another things on eve online marketplace. <br />
 USE: <br />
 -html,js,css <br />
