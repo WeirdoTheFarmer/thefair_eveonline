@@ -4,13 +4,20 @@ from typeID import TypeID
 
 from stationID import StationID
 
-from stationsID import StationsID
 
 
 app = FastAPI()
 
 origins = [
-    "http://192.168.1.2"
+    "http://192.168.1.2",
+    "http://192.168.1.2:80",
+    "http://192.168.1.2:8000",
+    "http://127.0.0.1",
+    "http://127.0.0.1:80",
+    "http://127.0.0.1:8000",
+    "http://localhost",
+    "http://localhost:80"
+    
 ]
 
 app.add_middleware(
