@@ -29,7 +29,15 @@ async function getData(_element) {
 	return result;
    }};
 
+<<<<<<< HEAD
 xhr.send();
+=======
+<<<<<<< HEAD
+xhr.send();
+=======
+    xhr.send();
+>>>>>>> a899426 (first try Kappa)
+>>>>>>> 4621202 (git OMFG)
 	getItemID(_element);
 }
 
@@ -43,7 +51,15 @@ function OnClick(id) {
 		childUl.style.display = "none";
 	} else {childUl.style.display = "block";}
 		
+<<<<<<< HEAD
 } 
+=======
+<<<<<<< HEAD
+} 
+=======
+}
+>>>>>>> a899426 (first try Kappa)
+>>>>>>> 4621202 (git OMFG)
 
 
 async function getData(elem_ID) {
