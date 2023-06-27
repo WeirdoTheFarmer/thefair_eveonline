@@ -27,17 +27,9 @@ async function getData(_element) {
 	result = resp["typeID"];
 	itemID = resp["typeID"];
 	return result;
-   }};
-
-<<<<<<< HEAD
-xhr.send();
-=======
-<<<<<<< HEAD
-xhr.send();
-=======
+        }
+    }
     xhr.send();
->>>>>>> a899426 (first try Kappa)
->>>>>>> 4621202 (git OMFG)
 	getItemID(_element);
 }
 
@@ -50,16 +42,7 @@ function OnClick(id) {
 	if (childUl.style.display === "block") {
 		childUl.style.display = "none";
 	} else {childUl.style.display = "block";}
-		
-<<<<<<< HEAD
 } 
-=======
-<<<<<<< HEAD
-} 
-=======
-}
->>>>>>> a899426 (first try Kappa)
->>>>>>> 4621202 (git OMFG)
 
 
 async function getData(elem_ID) {

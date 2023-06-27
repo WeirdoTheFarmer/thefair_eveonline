@@ -42,7 +42,6 @@ async def get_station_name(station_id: str):
     station_name = station_name_request.getID(station_id)
     return {"stationName": station_name}
 
-
 @app.get("/count")
 async def get_count_resources():
     return {"iron": 3, "wood": 1, "coal": 1, "gold": 1}
@@ -50,5 +49,4 @@ async def get_count_resources():
 #@app.get("/")
 #async def swap_div():
 #    return '<h1>Hello, World!</h1>'
-
 
