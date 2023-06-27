@@ -41,10 +41,7 @@ async def get_iteme_id(item_name: str):
 async def get_station_name(station_id: str):
     station_name = station_name_request.getID(station_id)
     return {"stationName": station_name}
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
+
 
 @app.get("/count")
 async def get_count_resources():
@@ -54,5 +51,4 @@ async def get_count_resources():
 #async def swap_div():
 #    return '<h1>Hello, World!</h1>'
 
->>>>>>> a899426 (first try Kappa)
->>>>>>> 4621202 (git OMFG)
+
