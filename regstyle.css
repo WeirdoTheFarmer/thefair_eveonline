@@ -1,0 +1,19 @@
+html {
+  overflow: hidden;
+}
+
+body { 
+  background-color: #1a1a1a; 
+  font-family: Verdana, serif, 95%;
+}
+
+* {
+  color: black;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
