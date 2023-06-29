@@ -1,7 +1,7 @@
 let myUrl_ = 'https://esi.evetech.net/latest/markets/10000002/orders/?datasource=tranquility&order_type=all&page=1&type_id=';
 let typeIdUrl_OLD = 'https://www.fuzzwork.co.uk/api/typeid.php?typename='
-let typeIdUrl = 'http://192.168.1.2:8000/itemID/'
-let location_id_url = 'http://192.168.1.2:8000/stationID/'
+let typeIdUrl = 'http://localhost:8000/itemID/'
+let location_id_url = 'http://localhost:8000/stationID/'
 const esi_url = ["https://esi.evetech.net/latest/markets/", "/orders/?datasource=tranquility&order_type=all&page=1&type_id="]
 
 const capitals_regions = ["10000043", "10000002", "10000032", "10000030"];
